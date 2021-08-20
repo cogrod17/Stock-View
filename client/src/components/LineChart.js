@@ -5,6 +5,7 @@ const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
 const LineChart = ({ stock }) => {
   const ref = useRef();
+
   useEffect(() => {
     if (!stock) return;
     makeLineChart(stock);
@@ -12,17 +13,6 @@ const LineChart = ({ stock }) => {
 
   const makeLineChart = async (stock) => {
     if (!stock) return;
-
-    const height = ref.current.clientHeight;
-    const width = ref.current.clientWidth;
-
-    const svg = d3
-      .select(ref.current)
-      .append("svg")
-      .attr("overflow", "visible")
-      .attr("viewBox", `0 0 ${width + 50} ${height + 20}`)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const data = JSON.parse(localStorage.getItem("data"))
       .slice(30)
@@ -33,6 +23,19 @@ const LineChart = ({ stock }) => {
         };
       })
       .sort((a, b) => a.datetime - b.datetime);
+
+    let color =
+      data[0].close > data[data.length - 1].close ? "red" : "greenyellow";
+    const height = ref.current.clientHeight;
+    const width = ref.current.clientWidth;
+
+    const svg = d3
+      .select(ref.current)
+      .append("svg")
+      .attr("overflow", "visible")
+      .attr("viewBox", `0 0 ${width + 50} ${height + 20}`)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
     const x = d3
       .scaleTime()
@@ -67,7 +70,7 @@ const LineChart = ({ stock }) => {
 
     lg.append("stop")
       .attr("offset", "0%")
-      .style("stop-color", "greenyellow")
+      .style("stop-color", color)
       .style("stop-opacity", 0.9);
 
     lg.append("stop")
@@ -95,7 +98,7 @@ const LineChart = ({ stock }) => {
     svg
       .append("path")
       .datum(data)
-      .attr("stroke", "greenyellow")
+      .attr("stroke", color)
       .attr("fill", "none")
       .attr("stroke-width", 1.5)
       .attr(
@@ -114,6 +117,12 @@ const LineChart = ({ stock }) => {
       .attr("r", 6.6)
       .style("opacity", 0);
 
+    const date = svg
+      .append("g")
+      .append("text")
+      .attr("fill", "white")
+      .attr("transform", `translate(${width / 2}, -20)`);
+
     const focusText = svg
       .append("g")
       .append("text")
@@ -125,6 +134,7 @@ const LineChart = ({ stock }) => {
     const mouseover = () => {
       focus.style("opacity", 0.9);
       focusText.style("opacity", 0.9);
+      date.style("opacity", 0.9);
     };
 
     const bisect = d3.bisector((d) => d.datetime).right;
@@ -134,14 +144,12 @@ const LineChart = ({ stock }) => {
       let i = bisect(data, x0);
       let d = data[i];
 
+      date.html(`${d3.utcFormat("%b %d, %Y")(d.datetime)}`);
+
       focus.attr("cx", x(d.datetime)).attr("cy", y(d.close));
 
       focusText
-        .html(
-          `${d3.utcFormat("%m/%d/%Y")(d.datetime)}: $${d3.format(",.2f")(
-            d.close
-          )}`
-        )
+        .html(`$${d3.format(",.2f")(d.close)}`)
         .attr("x", x(d.datetime) + 15)
         .attr("y", y(d.close));
     };
@@ -149,6 +157,7 @@ const LineChart = ({ stock }) => {
     const mouseout = () => {
       focus.style("opacity", 0);
       focusText.style("opacity", 0);
+      date.style("opacity", 0);
     };
 
     svg

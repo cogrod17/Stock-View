@@ -12,6 +12,42 @@ body {
   color: rgb(255, 255, 255, 0.9);
 }
 
+.header-container {
+  height: 50px;
+
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-wrap {
+  display: flex;
+  animation: ticker 15s infinite linear;
+  padding-left: 100%;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.header-ticker {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.header-ticker p {
+  font-size: 80%;
+}
+
 .svg-container {
   height: 350px;
   max-width: 700px;
