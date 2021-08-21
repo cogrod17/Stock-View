@@ -51,7 +51,7 @@ body {
 
 .header-name p:first-child {
   font-size: 200%;
-  margin-left: 10px;
+  margin-left: 5%;
 }
 
 .header-name p:last-of-type {
@@ -85,12 +85,7 @@ body {
 }
 
 .slider-ticker {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  min-width: 100px;
-  max-width: 100px;
-  padding-bottom: 10px;
+  width: 100px;
 }
 
 .slider-ticker p {
@@ -138,4 +133,50 @@ body {
 
 .time-selector p:hover {
   background: rgb(255, 255, 255, 0.1);
+}
+
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  border: #1c2533 solid 5px;
+  border-top: cyan solid 5px;
+  border-bottom: cyan solid 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spin 5s infinite ease-in-out;
+}
+
+.loader-inside {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 50%;
+  width: 50%;
+  border-radius: 50%;
+  border: #1c2533 solid 5px;
+  border-left: cyan solid 5px;
+  border-right: cyan solid 5px;
+  animation: spin 5s infinite ease-in-out;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import TimeSelector from "./TimeSelector";
 
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
@@ -15,13 +14,9 @@ const LineChart = ({ stock }) => {
   const makeLineChart = async (stock) => {
     if (!stock) return;
 
-    const data = JSON.parse(localStorage.getItem("data"))
-      .slice(30)
+    const data = stock.timeSeries
       .map((d) => {
-        return {
-          datetime: new Date(d.datetime),
-          close: d.close,
-        };
+        return { datetime: new Date(d.datetime), close: d.close };
       })
       .sort((a, b) => a.datetime - b.datetime);
 
@@ -35,7 +30,7 @@ const LineChart = ({ stock }) => {
       .attr("overflow", "visible")
       .attr("viewBox", `0 0 ${width + 50} ${height + 20}`)
       .append("g")
-      .attr("transform", `translate(${margin.left + 15},${margin.top})`);
+      .attr("transform", `translate(${margin.left + 10},${margin.top})`);
 
     const x = d3
       .scaleTime()
@@ -131,7 +126,6 @@ const LineChart = ({ stock }) => {
       .append("text")
       .style("opacity", 0)
       .attr("fill", "white")
-      .attr("text-anchor", "left")
       .attr("alignment-baseline", "middle");
 
     const mouseover = () => {
@@ -154,8 +148,8 @@ const LineChart = ({ stock }) => {
 
         focusText
           .html(`$${d3.format(",.2f")(d.close)}`)
-          .attr("x", x(d.datetime) + 15)
-          .attr("y", y(d.close));
+          .attr("x", x(d.datetime) - 20)
+          .attr("y", y(d.close) - 30);
       }
     };
 

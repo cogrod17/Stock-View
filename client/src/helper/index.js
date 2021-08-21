@@ -93,7 +93,7 @@ export class StockChart {
   };
 }
 
-// const tsla = new StockChart("TSLA");
+// const tsla = new StockChart("AAPL");
 
 // tsla.getHistory();
 // console.log(tsla);

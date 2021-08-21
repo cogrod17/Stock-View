@@ -6,6 +6,7 @@ import Slider from "./Slider";
 import Header from "./Header";
 import TimeSelector from "./TimeSelector";
 import useStock from "../hooks/useStock";
+import Loader from "./Loader";
 
 const App = () => {
   const [stock, getInfo] = useStock();
@@ -14,7 +15,7 @@ const App = () => {
     getInfo("AAPL");
   }, []);
 
-  if (!stock) return <div style={{ color: "white" }}>Loading</div>;
+  if (!stock) return <Loader />;
 
   return (
     <div className="app">
