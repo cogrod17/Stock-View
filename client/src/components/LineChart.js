@@ -25,8 +25,7 @@ const LineChart = ({ stock }) => {
       })
       .sort((a, b) => a.datetime - b.datetime);
 
-    let color =
-      data[0].close > data[data.length - 1].close ? "red" : "greenyellow";
+    let color = data[0].close > data[data.length - 1].close ? "red" : "cyan";
     const height = ref.current.clientHeight;
     const width = ref.current.clientWidth;
 
@@ -36,7 +35,7 @@ const LineChart = ({ stock }) => {
       .attr("overflow", "visible")
       .attr("viewBox", `0 0 ${width + 50} ${height + 20}`)
       .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+      .attr("transform", `translate(${margin.left + 15},${margin.top})`);
 
     const x = d3
       .scaleTime()
@@ -59,7 +58,10 @@ const LineChart = ({ stock }) => {
       .range([height, 0]);
 
     //yaxis
-    svg.append("g").attr("class", "axis").call(d3.axisLeft(y));
+    svg
+      .append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y).tickFormat((x) => `$${x}`));
 
     const lg = svg
       .append("linearGradient")
@@ -122,7 +124,7 @@ const LineChart = ({ stock }) => {
       .append("g")
       .append("text")
       .attr("fill", "white")
-      .attr("transform", `translate(${width / 2}, -20)`);
+      .attr("transform", `translate(${width / 2 - margin.left}, -20)`);
 
     const focusText = svg
       .append("g")
@@ -138,21 +140,23 @@ const LineChart = ({ stock }) => {
       date.style("opacity", 0.9);
     };
 
-    const bisect = d3.bisector((d) => d.datetime).right;
+    const bisect = d3.bisector((d) => d.datetime).left;
 
     const mousemove = (e) => {
       const x0 = x.invert(d3.pointer(e)[0]);
       let i = bisect(data, x0);
       let d = data[i];
 
-      date.html(`${d3.utcFormat("%b %d, %Y")(d.datetime)}`);
+      if (d) {
+        date.html(`${d3.utcFormat("%b %d, %Y")(d.datetime)}`);
 
-      focus.attr("cx", x(d.datetime)).attr("cy", y(d.close));
+        focus.attr("cx", x(d.datetime)).attr("cy", y(d.close));
 
-      focusText
-        .html(`$${d3.format(",.2f")(d.close)}`)
-        .attr("x", x(d.datetime) + 15)
-        .attr("y", y(d.close));
+        focusText
+          .html(`$${d3.format(",.2f")(d.close)}`)
+          .attr("x", x(d.datetime) + 15)
+          .attr("y", y(d.close));
+      }
     };
 
     const mouseout = () => {

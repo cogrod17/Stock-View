@@ -4,7 +4,8 @@
 }
 
 body {
-  background: rgb(0, 0, 0);
+  background: #1c2533;
+  /*background: rgb(0, 0, 0);*/
 }
 
 .app {
@@ -14,9 +15,49 @@ body {
 
 .header {
   display: flex;
-  margin: 0 auto;
+  margin: 20px auto;
   max-width: 700px;
   justify-content: space-evenly;
+  align-items: center;
+}
+
+.header div {
+  width: 100%;
+  text-align: center;
+  border-right: grey solid 1px;
+}
+
+.header div:last-of-type {
+  border-right: none;
+}
+
+.header div p:first-child {
+  color: rgb(129, 129, 129);
+  font-size: 70%;
+}
+
+.header p:last-child {
+  font-size: 110%;
+}
+
+.header-name {
+  display: flex;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 10px 0;
+  align-items: center;
+  border-bottom: grey solid 1px;
+}
+
+.header-name p:first-child {
+  font-size: 200%;
+  margin-left: 10px;
+}
+
+.header-name p:last-of-type {
+  font-size: 100%;
+  color: rgb(129, 129, 129);
+  padding: 0 40px;
 }
 
 .slider-container {
@@ -25,6 +66,7 @@ body {
   overflow: hidden;
   display: flex;
   align-items: center;
+  background: rgb(255, 255, 255, 0.1);
 }
 
 .ticker-wrap {
@@ -48,7 +90,6 @@ body {
   flex-direction: column;
   min-width: 100px;
   max-width: 100px;
-
   padding-bottom: 10px;
 }
 
@@ -57,7 +98,7 @@ body {
 }
 
 .svg-container {
-  margin: 0 auto;
+  margin: 20px auto;
   min-height: 350px;
   max-height: 350px;
   max-width: 700px;
@@ -71,18 +112,17 @@ body {
 }
 
 .axis path {
-  stroke: white;
+  stroke: grey;
   opacity: 1;
 }
 
 .axis text {
   fill: white;
-  opacity: 1;
 }
 
 .time-selector {
   display: flex;
-  margin: 10px auto;
+  margin: 0 auto;
   max-width: 700px;
   justify-content: space-evenly;
   margin-bottom: 40px;
@@ -91,5 +131,11 @@ body {
 }
 
 .time-selector p {
-  padding: 0 10px;
+  padding: 5px 10px;
+
+  cursor: pointer;
+}
+
+.time-selector p:hover {
+  background: rgb(255, 255, 255, 0.1);
 }

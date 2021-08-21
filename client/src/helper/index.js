@@ -80,14 +80,20 @@ export class StockChart {
         // start_date: "2021-08-13 09:30:00",
         //start_date: ,
         end_date: new Date(),
-        methods: ["quote", "time_series"],
+        methods: ["quote", "time_series", "price"],
         timezone: "America/New_York",
       }
     );
 
-    console.log(data.data[0]);
+    console.log(data);
+    this.price = data.data[2].price;
     this.quote = data.data[0];
     this.timeSeries = data.data[1].values;
     localStorage.setItem("stock", JSON.stringify(this));
   };
 }
+
+// const tsla = new StockChart("TSLA");
+
+// tsla.getHistory();
+// console.log(tsla);
