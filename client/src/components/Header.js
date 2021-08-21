@@ -1,63 +1,11 @@
 import React from "react";
 
-const Header = ({ x }) => {
+const Header = ({ stock }) => {
+  console.log(stock);
   return (
-    <div className="header-container">
-      <div className={`ticker-wrap`}>
-        <div className="header-ticker">
-          <h5>first one</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>last one</h5>
-          <p>^ 1.5%</p>
-        </div>
-
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-        <div className="header-ticker">
-          <h5>AAPL</h5>
-          <p>^ 1.5%</p>
-        </div>
-      </div>
+    <div>
+      <h3>{stock.symbol}</h3>
+      <p>{stock.quote.close}</p>
     </div>
   );
 };

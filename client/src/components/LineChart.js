@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import TimeSelector from "./TimeSelector";
 
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 

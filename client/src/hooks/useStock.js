@@ -9,8 +9,10 @@ const useStock = (symbol) => {
     getInfo(symbol);
   }, [symbol]);
 
-  const getInfo = (symbol) => {
+  const getInfo = async (symbol) => {
     const x = new StockChart(symbol);
+    //await x.getHistory();
+
     setStock(x);
   };
 

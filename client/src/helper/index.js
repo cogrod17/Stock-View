@@ -33,7 +33,8 @@ export class StockChart {
     this.wss = new WebSocket(
       `wss://ws.twelvedata.com/v1/quotes/price?apikey=${this.api_key}`
     );
-    this.data = [];
+    this.timeSeries = {};
+    this.quote = [];
   }
 
   subscribe = () => {
@@ -84,10 +85,9 @@ export class StockChart {
       }
     );
 
-    console.log(data);
-
-    this.data.unshift(...data.data[1].values);
+    console.log(data.data[0]);
+    this.quote = data.data[0];
+    this.timeSeries = data.data[1].values;
+    localStorage.setItem("stock", JSON.stringify(this));
   };
 }
-
-const chart = new StockChart("AAPL");
