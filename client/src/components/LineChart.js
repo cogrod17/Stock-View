@@ -113,9 +113,9 @@ const LineChart = ({ stock }) => {
     const focus = svg
       .append("g")
       .append("circle")
-      .style("fill", "none")
-      .attr("stroke", "white")
-      .attr("r", 6.6)
+      .style("fill", color)
+      .attr("stroke", color)
+      .attr("r", 4)
       .style("opacity", 0);
 
     const date = svg
@@ -133,7 +133,7 @@ const LineChart = ({ stock }) => {
       .attr("alignment-baseline", "middle");
 
     const mouseover = () => {
-      focus.style("opacity", 0.9);
+      focus.style("opacity", 1);
       focusText.style("opacity", 0.9);
       date.style("opacity", 0.9);
     };

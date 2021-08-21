@@ -12,6 +12,13 @@ body {
   color: rgb(255, 255, 255, 0.9);
 }
 
+.header {
+  display: flex;
+  margin: 0 auto;
+  max-width: 700px;
+  justify-content: space-evenly;
+}
+
 .slider-container {
   height: 50px;
   margin: 0 auto;

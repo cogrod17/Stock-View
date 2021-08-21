@@ -10,10 +10,10 @@ const useStock = (symbol) => {
   }, [symbol]);
 
   const getInfo = async (symbol) => {
-    const x = new StockChart(symbol);
+    //const x = new StockChart(symbol);
     //await x.getHistory();
-
-    setStock(x);
+    const x = localStorage.getItem("stock");
+    setStock(JSON.parse(x));
   };
 
   return [stock, getInfo];
