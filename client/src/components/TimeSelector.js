@@ -1,19 +1,21 @@
 import React from "react";
 
-const TimeSelector = () => {
-  return (
-    <div className="time-selector">
-      <p>1d</p>
-      <p>1w</p>
-      <p>1m</p>
-      <p>3m</p>
-      <p>6m</p>
-      <p>1y</p>
-      <p>2y</p>
-      <p>5y</p>
-      <p>10y</p>
-    </div>
-  );
+const TimeSelector = ({ scope, setScope }) => {
+  const x = ["1w", "1m", "3m", "6m", "1y", "2y", "5y", "10y", "All"];
+
+  const intervals = x.map((s, i) => {
+    return (
+      <p
+        key={i}
+        id={`${scope === s ? "active-scope" : ""}`}
+        onClick={(e) => setScope(e.target.innerHTML)}
+      >
+        {s}
+      </p>
+    );
+  });
+
+  return <div className="time-selector">{intervals}</div>;
 };
 
 export default TimeSelector;

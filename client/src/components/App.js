@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 //import CandleChart from "./CandleChart";
 import "./app.css";
 import LineChart from "./LineChart";
@@ -10,20 +10,20 @@ import Loader from "./Loader";
 
 const App = () => {
   const [stock, getInfo] = useStock();
+  const [scope, setScope] = useState("1y");
 
   useEffect(() => {
     getInfo("AAPL");
   }, []);
 
   if (!stock) return <Loader />;
-
   return (
     <div className="app">
       <Slider />
       {/*<CandleChart stock={stock} />*/}
       <Header stock={stock} />
-      <TimeSelector />
-      <LineChart stock={stock} />
+      <TimeSelector scope={scope} setScope={setScope} />
+      <LineChart scope={scope} stock={stock} />
     </div>
   );
 };

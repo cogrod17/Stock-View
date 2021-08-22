@@ -1,24 +1,22 @@
 import axios from "axios";
 //import WebSocket from "ws";
 
-export const timeIntervals = () => {
-  const now = new Date();
-  const xYearAgo = (x) =>
-    new Date(now.setFullYear(new Date().getFullYear() - x));
-  const xMonthAgo = (x) => new Date(now.setMonth(new Date().getMonth() - x));
-  const xDayAgo = (x) => new Date(now.setDate(new Date().getDate() - x));
+const xYearAgo = (x) =>
+  new Date(new Date().setFullYear(new Date().getFullYear() - x));
+const xMonthAgo = (x) =>
+  new Date(new Date().setMonth(new Date().getMonth() - x));
+const xDayAgo = (x) => new Date(new Date().setDate(new Date().getDate() - x));
 
-  return {
-    oneD: xDayAgo(1),
-    oneW: xDayAgo(7),
-    oneM: xMonthAgo(1),
-    threeM: xMonthAgo(3),
-    sixM: xMonthAgo(6),
-    oneY: xYearAgo(1),
-    twoY: xYearAgo(2),
-    fiveY: xYearAgo(5),
-    tenY: xYearAgo(10),
-  };
+export const timeIntervals = {
+  "1d": xDayAgo(1),
+  "1w": xDayAgo(7),
+  "1m": xMonthAgo(1),
+  "3m": xMonthAgo(3),
+  "6m": xMonthAgo(6),
+  "1y": xYearAgo(1),
+  "2y": xYearAgo(2),
+  "5y": xYearAgo(5),
+  "10y": xYearAgo(10),
 };
 
 //////////////////////////////////////////////////////////////////////////

@@ -1,26 +1,37 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
+import { timeIntervals } from "../helper";
 
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
-const LineChart = ({ stock }) => {
+const LineChart = ({ stock, scope }) => {
   const ref = useRef();
+
+  const bisect = d3.bisector((d) => d.datetime).left;
 
   useEffect(() => {
     if (!stock) return;
-    makeLineChart(stock);
-  }, [stock]);
+    makeLineChart(formatData(stock, scope));
+    return () => d3.select("svg").remove();
+  }, [stock, scope]);
 
-  const makeLineChart = async (stock) => {
-    if (!stock) return;
-
-    const data = stock.timeSeries
+  const formatData = (stock, scope) => {
+    let data;
+    const time_series = stock.timeSeries
       .map((d) => {
         return { datetime: new Date(d.datetime), close: d.close };
       })
       .sort((a, b) => a.datetime - b.datetime);
 
-    let color = data[0].close > data[data.length - 1].close ? "red" : "cyan";
+    scope !== "All"
+      ? (data = time_series.slice(bisect(time_series, timeIntervals[scope])))
+      : (data = time_series);
+
+    return data;
+  };
+
+  const makeLineChart = async (data) => {
+    let color = +data[0].close > +data[data.length - 1].close ? "red" : "cyan";
     const height = ref.current.clientHeight;
     const width = ref.current.clientWidth;
 
@@ -32,6 +43,7 @@ const LineChart = ({ stock }) => {
       .append("g")
       .attr("transform", `translate(${margin.left + 10},${margin.top})`);
 
+    //xaxis
     const x = d3
       .scaleTime()
       .domain([
@@ -40,24 +52,24 @@ const LineChart = ({ stock }) => {
       ])
       .range([0, width]);
 
-    //xaxis
     svg
       .append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0, ${height - margin.bottom})`)
       .call(d3.axisBottom(x));
 
+    //yaxis
     const y = d3
       .scaleLinear()
-      .domain([d3.min(data, (d) => d.close), d3.max(data, (d) => +d.close)])
+      .domain([d3.min(data, (d) => +d.close), d3.max(data, (d) => +d.close)])
       .range([height, 0]);
 
-    //yaxis
     svg
       .append("g")
       .attr("class", "axis")
       .call(d3.axisLeft(y).tickFormat((x) => `$${x}`));
 
+    //adding linear gradient
     const lg = svg
       .append("linearGradient")
       .attr("id", "area-gradient")
@@ -78,6 +90,11 @@ const LineChart = ({ stock }) => {
 
     const curve = d3.curveLinear;
 
+    const gradStop = (d) =>
+      scope === "All" || scope === "10y" || scope === "5y" || scope === "2y"
+        ? y(d.close)
+        : d.close;
+
     svg
       .append("path")
       .datum(data)
@@ -88,11 +105,12 @@ const LineChart = ({ stock }) => {
           .area()
           .curve(curve)
           .x((d) => x(d.datetime))
-          .y0(y(data[0].close))
+          .y0(y(d3.min(data, (d) => gradStop(d))))
           .y1((d) => y(d.close))
       )
       .style("fill", "url(#area-gradient)");
 
+    //adding line
     svg
       .append("path")
       .datum(data)
@@ -107,6 +125,7 @@ const LineChart = ({ stock }) => {
           .y((d) => y(d.close))
       );
 
+    //focus circle
     const focus = svg
       .append("g")
       .append("circle")
@@ -134,8 +153,6 @@ const LineChart = ({ stock }) => {
       date.style("opacity", 0.9);
     };
 
-    const bisect = d3.bisector((d) => d.datetime).left;
-
     const mousemove = (e) => {
       const x0 = x.invert(d3.pointer(e)[0]);
       let i = bisect(data, x0);
@@ -143,9 +160,7 @@ const LineChart = ({ stock }) => {
 
       if (d) {
         date.html(`${d3.utcFormat("%b %d, %Y")(d.datetime)}`);
-
         focus.attr("cx", x(d.datetime)).attr("cy", y(d.close));
-
         focusText
           .html(`$${d3.format(",.2f")(d.close)}`)
           .attr("x", x(d.datetime) - 20)
