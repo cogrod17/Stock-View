@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useCallback } from "react";
+import * as d3 from "d3";
 import axios from "axios";
 import { finPrepApiKey } from "../topSecret";
 
 const Ticker = ({ data }) => {
   let color = data.changesPercentage > 0 ? "greenyellow" : "red";
+  let transform = data.changesPercentage > 0 ? null : "rotate(180deg)";
 
   return (
     <div className="slider-ticker">
-      <div style={{ color }}>^</div>
       <div>
         <h4>{data.ticker}</h4>
-        <p>${data.price}</p>
+        <p>${d3.format(",")(data.price)}</p>
       </div>
+      <div style={{ color, transform }}>^</div>
       <p style={{ color }} id="percent">
         {Number(data.changesPercentage).toFixed(2)}%
       </p>

@@ -19,7 +19,11 @@ const LineChart = ({ stock, scope }) => {
     let data;
     const time_series = stock.timeSeries
       .map((d) => {
-        return { datetime: new Date(d.datetime), close: d.close };
+        return {
+          datetime: new Date(d.datetime),
+          close: d.close,
+          volume: +d.volume,
+        };
       })
       .sort((a, b) => a.datetime - b.datetime);
 
@@ -63,6 +67,11 @@ const LineChart = ({ stock, scope }) => {
       .scaleLinear()
       .domain([d3.min(data, (d) => +d.close), d3.max(data, (d) => +d.close)])
       .range([height, 0]);
+
+    // const y1 = d3
+    //   .scaleLinear()
+    //   .domain([d3.min(data, (d) => +d.volume), d3.max(data, (d) => +d.volume)])
+    //   .range([0, height]);
 
     svg
       .append("g")
@@ -173,6 +182,18 @@ const LineChart = ({ stock, scope }) => {
       focusText.style("opacity", 0);
       date.style("opacity", 0);
     };
+
+    // TRYING to add barchart for volume
+    // svg
+    //   .append("g")
+    //   .attr("fill", "white")
+    //   .selectAll("rect")
+    //   .data(data)
+    //   .join("rect")
+    //   .attr("x", (d) => x(d.datetime))
+    //   .attr("y", y1(d3.min(data, (d) => d.volume)))
+    //   .attr("width", "0.2%")
+    //   .attr("height", (d) => (height - y1(d.close)) * 0.1);
 
     svg
       .append("rect")

@@ -89,9 +89,10 @@ body {
   width: 150px;
   display: flex;
   padding-left: 30px;
+  border-right: rgb(128, 128, 128, 0.4) solid 1px;
 }
 
-.slider-ticker div:first-of-type {
+.slider-ticker div:last-of-type {
   font-size: 150%;
   align-self: center;
   padding: 0 10px;
@@ -99,6 +100,7 @@ body {
 
 .slider-ticker h4 {
   align-self: center;
+  border-bottom: grey solid 1px;
 }
 
 .slider-ticker p {
@@ -107,16 +109,23 @@ body {
 }
 
 #percent {
-  padding-left: 15px;
   align-self: center;
   justify-self: center;
+  font-size: 120%;
 }
 
 .svg-container {
-  margin: 20px auto;
-  min-height: 350px;
-  max-height: 350px;
+  margin: 0 auto;
+  margin-top: 20px;
+  height: 300px;
   max-width: 700px;
+}
+
+.bar-chart-container {
+  margin: 5px auto;
+  max-width: 700px;
+  height: 50px;
+  border: blue solid 1px;
 }
 
 @media (max-width: 700px) {

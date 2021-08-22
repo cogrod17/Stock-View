@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 //import CandleChart from "./CandleChart";
 import "./app.css";
 import LineChart from "./LineChart";
+
 import Slider from "./Slider";
 import Header from "./Header";
 import TimeSelector from "./TimeSelector";
@@ -24,6 +25,7 @@ const App = () => {
       <Header stock={stock} />
       <TimeSelector scope={scope} setScope={setScope} />
       <LineChart scope={scope} stock={stock} />
+      <BarChart stock={stock} />
     </div>
   );
 };
