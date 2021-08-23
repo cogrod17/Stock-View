@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { StockChart } from "../helper";
 
 const useStock = (symbol) => {
-  const [stock, setStock] = useState(symbol);
+  const [stock, setStock] = useState();
 
   useEffect(() => {
     if (!symbol) return;
@@ -10,10 +10,15 @@ const useStock = (symbol) => {
   }, [symbol]);
 
   const getInfo = async (symbol) => {
-    //const x = new StockChart(symbol);
-    //await x.getHistory();
-    const x = localStorage.getItem("stock");
-    setStock(JSON.parse(x));
+    // const x = new StockChart(symbol);
+    // await x.getLongHistory();
+    // await x.get3mHistory();
+
+    // localStorage.setItem("stock", JSON.stringify(x));
+    // setStock(x);
+
+    const x = JSON.parse(localStorage.getItem("stock"));
+    setStock(x);
   };
 
   return [stock, getInfo];

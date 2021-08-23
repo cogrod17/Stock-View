@@ -1,5 +1,8 @@
 import axios from "axios";
-//import WebSocket from "ws";
+import { twelveDataKey } from "../topSecret";
+import { bisector } from "d3";
+
+const bisect = bisector((d) => d.datetime).left;
 
 const xYearAgo = (x) =>
   new Date(new Date().setFullYear(new Date().getFullYear() - x));
@@ -26,13 +29,18 @@ export const timeIntervals = {
 export class StockChart {
   constructor(symbol) {
     this.symbol = symbol;
-    this.api_key = "5f75c7639947410a99d3551417a18f60";
+    this.api_key = twelveDataKey;
     this.isConnected = false;
     this.wss = new WebSocket(
       `wss://ws.twelvedata.com/v1/quotes/price?apikey=${this.api_key}`
     );
-    this.timeSeries = {};
     this.quote = [];
+    this.timeSeries = {
+      "1d": [],
+      "1w": [],
+      "1m": [],
+      All: [],
+    };
   }
 
   subscribe = () => {
@@ -69,29 +77,55 @@ export class StockChart {
     });
   };
 
-  getHistory = async () => {
+  getShortHistory = async () => {
+    const { data } = await axios.post(
+      `https://api.twelvedata.com/complex_data?apikey=${this.api_key}`,
+      {
+        symbols: [this.symbol],
+        intervals: [`1min`],
+        start_date: timeIntervals["1m"],
+        end_date: new Date(),
+        methods: ["time_series"],
+        timezone: "America/New_York",
+      }
+    );
+
+    const { values } = data.data[0];
+
+    const final = values
+      .map((d) => {
+        return { ...d, datetime: new Date(d.datetime) };
+      })
+      .sort((a, b) => a.datetime - b.datetime);
+
+    this.timeSeries["1m"] = final;
+    this.timeSeries["1w"] = final.slice(bisect(final, timeIntervals["1w"]));
+    this.timeSeries["1d"] = final.slice(bisect(final, timeIntervals["1d"]));
+  };
+
+  getLongHistory = async () => {
     const { data } = await axios.post(
       `https://api.twelvedata.com/complex_data?apikey=${this.api_key}`,
       {
         symbols: [this.symbol],
         intervals: [`1day`],
-        // start_date: "2021-08-13 09:30:00",
-        //start_date: ,
         end_date: new Date(),
         methods: ["quote", "time_series", "price"],
         timezone: "America/New_York",
       }
     );
 
-    console.log(data);
     this.price = data.data[2].price;
     this.quote = data.data[0];
-    this.timeSeries = data.data[1].values;
-    localStorage.setItem("stock", JSON.stringify(this));
+    this.timeSeries["All"] = data.data[1].values;
   };
 }
 
-// const tsla = new StockChart("AAPL");
+const x = async () => {
+  const tsla = new StockChart("TSLA");
+  await tsla.getShortHistory();
+  await tsla.getLongHistory();
 
-// tsla.getHistory();
-// console.log(tsla);
+  localStorage.setItem("stock", JSON.stringify(tsla));
+  console.log("okay");
+};

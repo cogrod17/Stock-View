@@ -2,22 +2,24 @@ import React, { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 import { timeIntervals } from "../helper";
 
+const bisect = d3.bisector((d) => d.datetime).left;
+
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
 const LineChart = ({ stock, scope }) => {
   const ref = useRef();
 
-  const bisect = d3.bisector((d) => d.datetime).left;
-
-  useEffect(() => {
-    if (!stock) return;
-    makeLineChart(formatData(stock, scope));
-    return () => d3.select("svg").remove();
-  }, [stock, scope]);
-
   const formatData = (stock, scope) => {
     let data;
-    const time_series = stock.timeSeries
+    let series;
+
+    if (scope === "1w" || scope === "1m" || scope === "1d") {
+      series = stock.timeSeries[scope];
+    } else {
+      series = stock.timeSeries["All"];
+    }
+
+    const time_series = series
       .map((d) => {
         return {
           datetime: new Date(d.datetime),
@@ -27,12 +29,20 @@ const LineChart = ({ stock, scope }) => {
       })
       .sort((a, b) => a.datetime - b.datetime);
 
-    scope !== "All"
-      ? (data = time_series.slice(bisect(time_series, timeIntervals[scope])))
-      : (data = time_series);
+    if (scope === "All") data = time_series;
+    if (scope !== "All")
+      data = time_series.slice(bisect(time_series, timeIntervals[scope]));
+
+    console.log(data);
 
     return data;
   };
+
+  useEffect(() => {
+    if (!stock) return;
+    makeLineChart(formatData(stock, scope));
+    return () => d3.select("svg").remove();
+  }, [stock, scope]);
 
   const makeLineChart = async (data) => {
     let color = +data[0].close > +data[data.length - 1].close ? "red" : "cyan";
@@ -125,7 +135,7 @@ const LineChart = ({ stock, scope }) => {
       .datum(data)
       .attr("stroke", color)
       .attr("fill", "none")
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 1)
       .attr(
         "d",
         d3

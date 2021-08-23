@@ -1,7 +1,8 @@
 import React from "react";
 
 const Header = ({ stock }) => {
-  console.log(stock);
+  const color = +stock.quote.percent_change >= 0 ? "greenyellow" : "red";
+
   return (
     <div>
       <div className="header-name">
@@ -15,7 +16,9 @@ const Header = ({ stock }) => {
         </div>
         <div>
           <p>Change</p>
-          <p>{Number(stock.quote.percent_change).toFixed(2)}%</p>
+          <p style={{ color }}>
+            {Number(stock.quote.percent_change).toFixed(2)}%
+          </p>
         </div>
         <div>
           <p>52w High</p>
