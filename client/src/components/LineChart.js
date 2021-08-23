@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 import { timeIntervals } from "../helper";
 
-const bisect = d3.bisector((d) => d.datetime).left;
+const bisect = d3.bisector((d) => d.datetime).right;
 
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
@@ -19,23 +19,18 @@ const LineChart = ({ stock, scope }) => {
       series = stock.timeSeries["All"];
     }
 
-    const time_series = series
-      .map((d) => {
-        return {
-          datetime: new Date(d.datetime),
-          close: d.close,
-          volume: +d.volume,
-        };
-      })
-      .sort((a, b) => a.datetime - b.datetime);
+    let time_series = series.map((d) => {
+      return {
+        datetime: new Date(d.datetime),
+        close: d.close,
+        volume: +d.volume,
+      };
+    });
 
-    if (scope === "All") data = time_series;
-    if (scope !== "All")
-      data = time_series.slice(bisect(time_series, timeIntervals[scope]));
+    if (scope === "All") return time_series;
 
-    console.log(data);
-
-    return data;
+    return time_series.slice(bisect(time_series, timeIntervals[scope]));
+    //return time_series.slice(bisect(time_series, timeIntervals[scope]));
   };
 
   useEffect(() => {
@@ -58,19 +53,30 @@ const LineChart = ({ stock, scope }) => {
       .attr("transform", `translate(${margin.left + 10},${margin.top})`);
 
     //xaxis
+    // const x1 = d3
+    //   .scaleBand()
+    //   .domain(
+    //     d3.utcDay
+    //       .range(data[0].datetime, +data[data.length - 1].datetime + 1)
+    //       .filter((d) => d.getUTCDay() !== 0 && d.getUTCDay() !== 6)
+    //   )
+    //   .range([0, width]);
+
     const x = d3
-      .scaleTime()
-      .domain([
-        d3.min(data, (d) => d.datetime),
-        d3.max(data, (d) => d.datetime),
-      ])
+      .scaleLinear()
+      .domain(d3.extent(data, (d) => d.datetime))
       .range([0, width]);
+
+    // svg
+    //   .append("g")
+    //   .attr("transform", `translate(0, ${height - margin.bottom})`)
+    //   .call(d3.axisBottom(x1));
 
     svg
       .append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0, ${height - margin.bottom})`)
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).tickFormat(d3.utcFormat("%m/%d")));
 
     //yaxis
     const y = d3
@@ -125,7 +131,7 @@ const LineChart = ({ stock, scope }) => {
           .curve(curve)
           .x((d) => x(d.datetime))
           .y0(y(d3.min(data, (d) => gradStop(d))))
-          .y1((d) => y(d.close))
+          .y1((d) => y(+d.close))
       )
       .style("fill", "url(#area-gradient)");
 
@@ -140,7 +146,10 @@ const LineChart = ({ stock, scope }) => {
         "d",
         d3
           .line()
-          .x((d) => x(d.datetime))
+          .x((d) => {
+            //console.log(x(d.datetime));
+            return x(d.datetime);
+          })
           .y((d) => y(d.close))
       );
 

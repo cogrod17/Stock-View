@@ -82,7 +82,7 @@ export class StockChart {
       `https://api.twelvedata.com/complex_data?apikey=${this.api_key}`,
       {
         symbols: [this.symbol],
-        intervals: [`1min`],
+        intervals: [`5min`],
         start_date: timeIntervals["1m"],
         end_date: new Date(),
         methods: ["time_series"],
@@ -115,9 +115,15 @@ export class StockChart {
       }
     );
 
+    const final = data.data[1].values
+      .map((d) => {
+        return { ...d, datetime: new Date(d.datetime) };
+      })
+      .sort((a, b) => a.datetime - b.datetime);
+
     this.price = data.data[2].price;
     this.quote = data.data[0];
-    this.timeSeries["All"] = data.data[1].values;
+    this.timeSeries["All"] = final;
   };
 }
 
