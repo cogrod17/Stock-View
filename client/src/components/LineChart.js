@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import { timeIntervals } from "../helper";
 
 const bisect = d3.bisector((d) => d.datetime).right;
-
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
 const LineChart = ({ stock, scope }) => {
@@ -22,7 +21,7 @@ const LineChart = ({ stock, scope }) => {
       return {
         datetime: new Date(d.datetime),
         close: d.close,
-        volume: +d.volume,
+        //volume: +d.volume,
       };
     });
 
@@ -190,9 +189,9 @@ const LineChart = ({ stock, scope }) => {
     };
 
     const formatDate = (d) => {
-      let d1 = d.toString().split(" ").slice(0, 5).join(" ");
-      let form = d3.utcFormat;
-      if (scope === "1w" || scope === "1m") return d1;
+      let d1 = d.toString().split(" ");
+      if (scope === "1w" || scope === "1m")
+        return `${d1[0]} ${d1[1]} ${d1[2]} ${d1[4]}`;
       else return d3.utcFormat("%b %d, %Y")(d);
     };
 

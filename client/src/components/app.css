@@ -48,17 +48,39 @@ body {
   padding: 10px 0;
   align-items: center;
   border-bottom: grey solid 1px;
+  justify-content: space-between;
 }
 
-.header-name p:first-child {
+.header-name div {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  align-items: center;
+}
+
+.header-name div p:first-child {
   font-size: 200%;
-  margin-left: 5%;
+  margin-left: 10%;
 }
 
-.header-name p:last-of-type {
+.header-name div p:nth-child(2) {
   font-size: 100%;
   color: rgb(129, 129, 129);
   padding: 0 40px;
+}
+
+#search-btn {
+  margin-right: 10%;
+  border-radius: 5px;
+  border: rgb(255, 255, 255, 0.1) solid 1px;
+  padding: 2px 10px;
+  color: grey;
+  cursor: pointer;
+}
+
+#search-btn:hover {
+  background: rgb(255, 255, 255, 0.1);
+  color: cyan;
 }
 
 .slider-container {
@@ -213,4 +235,73 @@ body {
 #active-scope {
   background: rgb(255, 255, 255, 0.1);
   color: cyan;
+}
+
+.search-dimmer {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgb(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.search-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: grey solid 1px;
+  background: #1c2533;
+  height: 60%;
+  width: 80%;
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+}
+
+#close {
+  position: absolute;
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  top: 1.5%;
+  left: 93%;
+  cursor: pointer;
+}
+
+.search-container input {
+  margin: 20px auto;
+  padding: 5px;
+  width: 75%;
+  outline: none;
+  background: none;
+  border: none;
+  border-bottom: grey solid 1px;
+  font-size: 20px;
+  color: white;
+}
+
+.search-results {
+  margin: 0 auto;
+  width: 70%;
+  max-height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-results div {
+  padding: 10px;
+  border-bottom: grey solid 1px;
+  cursor: pointer;
+}
+
+.search-results div:hover {
+  background: rgb(255, 255, 255, 0.1);
+}
+
+.search-results div p:last-child {
+  align-self: center;
+  font-size: 80%;
+  color: grey;
 }

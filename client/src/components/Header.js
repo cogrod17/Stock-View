@@ -1,13 +1,23 @@
 import React from "react";
 
-const Header = ({ stock }) => {
+const Header = ({ stock, setIsOpen }) => {
   const color = +stock.quote.percent_change >= 0 ? "greenyellow" : "red";
 
   return (
     <div>
       <div className="header-name">
-        <p>{stock.symbol}</p>
-        <p> {stock.quote.name}</p>
+        <div>
+          <p>{stock.symbol}</p>
+          <p> {stock.quote.name}</p>
+        </div>
+        <p
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          id="search-btn"
+        >
+          Search
+        </p>
       </div>
       <div className="header">
         <div>
