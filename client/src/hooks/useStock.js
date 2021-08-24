@@ -10,9 +10,10 @@ const useStock = (symbol) => {
   }, [symbol]);
 
   const getInfo = async (symbol) => {
+    setStock("loading");
     // const x = new StockChart(symbol);
     // await x.getLongHistory();
-    // await x.get3mHistory();
+    // await x.getShortHistory();
 
     // localStorage.setItem("stock", JSON.stringify(x));
     // setStock(x);

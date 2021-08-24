@@ -104,7 +104,7 @@ const LineChart = ({ stock, scope }) => {
       .attr("x1", "0%")
       .attr("y1", "0%")
       .attr("x2", "0%")
-      .attr("y2", `85%`);
+      .attr("y2", `110%`);
 
     lg.append("stop")
       .attr("offset", "0%")
@@ -113,8 +113,7 @@ const LineChart = ({ stock, scope }) => {
 
     lg.append("stop")
       .attr("offset", "100%")
-      .style("stop-color", "rgb(0, 0, 0)")
-      .style("stop-opacity", 0);
+      .style("stop-color", "rgb(0, 0, 0, 0)");
 
     const curve = d3.curveLinear;
 
@@ -128,7 +127,7 @@ const LineChart = ({ stock, scope }) => {
           .area()
           .curve(curve)
           .x((d) => x(d.datetime))
-          .y0(y(d3.min(data, (d) => d.close)))
+          .y0(y(d3.min(data, (d) => +d.close)))
           .y1((d) => y(+d.close))
       )
       .style("fill", "url(#area-gradient)");
@@ -161,7 +160,7 @@ const LineChart = ({ stock, scope }) => {
       .append("g")
       .append("text")
       .attr("fill", "white")
-      .attr("transform", `translate(${width / 2 - margin.left}, -20)`);
+      .attr("transform", `translate(${width / 2 - margin.left * 2}, -50)`);
 
     const focusText = svg
       .append("g")

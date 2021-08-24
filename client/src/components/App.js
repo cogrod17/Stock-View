@@ -10,23 +10,18 @@ import useStock from "../hooks/useStock";
 import Loader from "./Loader";
 
 const App = () => {
-  const [stock, getInfo] = useStock("TSLA");
+  const [stock, getInfo] = useStock("JPM");
   const [scope, setScope] = useState("1y");
   const [isOpen, setIsOpen] = useState(false);
 
-  // useEffect(() => {
-  //   getInfo("AAPL");
-  // }, []);
+  if (!stock)
+    return <Search status={"none"} getInfo={getInfo} toggle={setIsOpen} />;
+  if (stock === "loading") return <Loader />;
 
-  if (!stock) return <Loader />;
-  console.log(stock);
   return (
     <div className="app">
-      {isOpen && (
-        <Search getInfo={getInfo} isOpen={isOpen} toggle={setIsOpen} />
-      )}
+      {isOpen && <Search getInfo={getInfo} toggle={setIsOpen} />}
       <Slider />
-      {/*<CandleChart stock={stock} />*/}
       <Header stock={stock} setIsOpen={setIsOpen} />
       <TimeSelector scope={scope} setScope={setScope} />
       <LineChart scope={scope} stock={stock} />

@@ -11,7 +11,6 @@ const Search = ({ toggle, getInfo }) => {
     const r = await axios.get(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${term}&apikey=${alphaApiKey}`
     );
-    console.log(r);
     setResults(r.data.bestMatches);
   };
 
@@ -21,9 +20,8 @@ const Search = ({ toggle, getInfo }) => {
   };
 
   const renderResults = results.map((r, i) => {
-    console.log(results);
     return (
-      <div onClick={() => onClick(r["1. symbol"])}>
+      <div key={i} onClick={() => onClick(r["1. symbol"])}>
         <p>{r["1. symbol"]}</p>
         <p>{r["2. name"]}</p>
       </div>
