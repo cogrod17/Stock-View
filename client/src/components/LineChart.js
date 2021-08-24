@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { timeIntervals } from "../helper";
 
@@ -10,7 +10,6 @@ const LineChart = ({ stock, scope }) => {
   const ref = useRef();
 
   const formatData = (stock, scope) => {
-    let data;
     let series;
 
     if (scope === "1w" || scope === "1m" || scope === "1d") {
@@ -30,16 +29,15 @@ const LineChart = ({ stock, scope }) => {
     if (scope === "All") return time_series;
 
     return time_series.slice(bisect(time_series, timeIntervals[scope]));
-    //return time_series.slice(bisect(time_series, timeIntervals[scope]));
   };
 
   useEffect(() => {
     if (!stock) return;
-    makeLineChart(formatData(stock, scope));
+    makeLineChart(formatData(stock, scope), scope);
     return () => d3.select("svg").remove();
   }, [stock, scope]);
 
-  const makeLineChart = async (data) => {
+  const makeLineChart = async (data, scope) => {
     let color = +data[0].close > +data[data.length - 1].close ? "red" : "cyan";
     const height = ref.current.clientHeight;
     const width = ref.current.clientWidth;
@@ -52,42 +50,48 @@ const LineChart = ({ stock, scope }) => {
       .append("g")
       .attr("transform", `translate(${margin.left + 10},${margin.top})`);
 
-    //xaxis
-    // const x1 = d3
-    //   .scaleBand()
-    //   .domain(
-    //     d3.utcDay
-    //       .range(data[0].datetime, +data[data.length - 1].datetime + 1)
-    //       .filter((d) => d.getUTCDay() !== 0 && d.getUTCDay() !== 6)
-    //   )
-    //   .range([0, width]);
-
+    //for graphing only the times was have data for
     const x = d3
-      .scaleLinear()
+      .scaleBand()
+      .domain(data.map((d, i) => d.datetime))
+      .range([0, width]);
+
+    //for labels
+    const x1 = d3
+      .scaleTime()
       .domain(d3.extent(data, (d) => d.datetime))
       .range([0, width]);
 
-    // svg
-    //   .append("g")
-    //   .attr("transform", `translate(0, ${height - margin.bottom})`)
-    //   .call(d3.axisBottom(x1));
+    const formatTicks = (d) => {
+      if (scope === "1w") return d3.utcFormat("%a %d")(d);
+      if (scope === "3m" || scope === "1m") return d3.utcFormat("%b %d")(d);
+      if (scope === "6m" || scope === "1y") return d3.utcFormat("%b %d, %Y")(d);
+      if (scope === "2y" || scope === "5y") return d3.utcFormat("%b %Y")(d);
+      if (scope === "10y" || scope === "All")
+        return d3.utcFormat("%b %d, %Y")(d);
+    };
+
+    const setTicks = () => {
+      if (scope === "3m" || scope === "6m") return 7;
+      else return 6;
+    };
+
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .call(d3.axisBottom(x1).ticks(setTicks()).tickFormat(formatTicks));
 
     svg
       .append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0, ${height - margin.bottom})`)
-      .call(d3.axisBottom(x).tickFormat(d3.utcFormat("%m/%d")));
+      .call(d3.axisBottom(x).tickSize(0).tickFormat(d3.utcFormat("")));
 
     //yaxis
     const y = d3
       .scaleLinear()
       .domain([d3.min(data, (d) => +d.close), d3.max(data, (d) => +d.close)])
       .range([height, 0]);
-
-    // const y1 = d3
-    //   .scaleLinear()
-    //   .domain([d3.min(data, (d) => +d.volume), d3.max(data, (d) => +d.volume)])
-    //   .range([0, height]);
 
     svg
       .append("g")
@@ -115,11 +119,6 @@ const LineChart = ({ stock, scope }) => {
 
     const curve = d3.curveLinear;
 
-    const gradStop = (d) =>
-      scope === "All" || scope === "10y" || scope === "5y" || scope === "2y"
-        ? y(d.close)
-        : d.close;
-
     svg
       .append("path")
       .datum(data)
@@ -130,7 +129,7 @@ const LineChart = ({ stock, scope }) => {
           .area()
           .curve(curve)
           .x((d) => x(d.datetime))
-          .y0(y(d3.min(data, (d) => gradStop(d))))
+          .y0(y(d3.min(data, (d) => d.close)))
           .y1((d) => y(+d.close))
       )
       .style("fill", "url(#area-gradient)");
@@ -146,10 +145,7 @@ const LineChart = ({ stock, scope }) => {
         "d",
         d3
           .line()
-          .x((d) => {
-            //console.log(x(d.datetime));
-            return x(d.datetime);
-          })
+          .x((d) => x(d.datetime))
           .y((d) => y(d.close))
       );
 
@@ -181,13 +177,32 @@ const LineChart = ({ stock, scope }) => {
       date.style("opacity", 0.9);
     };
 
+    //inverting xAxis band scale
+    x.invert = (x3) => {
+      const domain = x.domain;
+      const step = x.step();
+      const range = x.range();
+      let domainIndex;
+      if (x3 < range[0] + step) domainIndex = 0;
+      else if (x3 > range[1] - step) domainIndex = domain().length - 1;
+      else domainIndex = Math.floor(x3 / step);
+      return domain()[domainIndex];
+    };
+
+    const formatDate = (d) => {
+      let d1 = d.toString().split(" ").slice(0, 5).join(" ");
+      let form = d3.utcFormat;
+      if (scope === "1w" || scope === "1m") return d1;
+      else return d3.utcFormat("%b %d, %Y")(d);
+    };
+
     const mousemove = (e) => {
       const x0 = x.invert(d3.pointer(e)[0]);
       let i = bisect(data, x0);
       let d = data[i];
 
       if (d) {
-        date.html(`${d3.utcFormat("%b %d, %Y")(d.datetime)}`);
+        date.html(formatDate(d.datetime));
         focus.attr("cx", x(d.datetime)).attr("cy", y(d.close));
         focusText
           .html(`$${d3.format(",.2f")(d.close)}`)

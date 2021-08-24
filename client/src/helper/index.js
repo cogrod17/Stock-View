@@ -30,7 +30,6 @@ export class StockChart {
   constructor(symbol) {
     this.symbol = symbol;
     this.api_key = twelveDataKey;
-    this.isConnected = false;
     this.wss = new WebSocket(
       `wss://ws.twelvedata.com/v1/quotes/price?apikey=${this.api_key}`
     );
