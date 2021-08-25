@@ -10,7 +10,7 @@ import useStock from "../hooks/useStock";
 import Loader from "./Loader";
 
 const App = () => {
-  const [stock, getInfo] = useStock("QQQ");
+  const [stock, getInfo] = useStock();
   const [scope, setScope] = useState("1y");
   const [isOpen, setIsOpen] = useState(false);
 

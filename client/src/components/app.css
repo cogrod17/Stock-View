@@ -303,7 +303,7 @@ body {
 
 .search-results div {
   padding: 10px;
-  border-top: grey solid 1px;
+  border-bottom: grey solid 1px;
   cursor: pointer;
 }
 
@@ -311,7 +311,7 @@ body {
   background: rgb(255, 255, 255, 0.1);
 }
 
-.search-results div p:last-child {
+.search-results div p:nth-child(2) {
   align-self: center;
   font-size: 80%;
   color: grey;

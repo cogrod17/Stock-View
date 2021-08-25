@@ -85,8 +85,6 @@ const LineChart = ({ stock, scope }) => {
       else return 6;
     };
 
-    console.log(data);
-
     svg
       .append("g")
       .attr("transform", `translate(0, ${height - margin.bottom})`)

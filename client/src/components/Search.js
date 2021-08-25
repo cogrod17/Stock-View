@@ -13,7 +13,10 @@ const Search = ({ toggle, getInfo, status }) => {
     const r = await axios.get(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${term}&apikey=${alphaApiKey}`
     );
-    setResults(r.data.bestMatches);
+
+    if (r.data.Note) setResults(["please try again in 1 minute"]);
+    else if (!r.data.bestMatches.length) setResults(["No matches"]);
+    else setResults(r.data.bestMatches);
   };
 
   const onClick = (x) => {
@@ -21,14 +24,24 @@ const Search = ({ toggle, getInfo, status }) => {
     toggle(false);
   };
 
-  const renderResults = results.map((r, i) => {
-    return (
-      <div key={i} onClick={() => onClick(r["1. symbol"])}>
-        <p>{r["1. symbol"]}</p>
-        <p>{r["2. name"]}</p>
-      </div>
-    );
-  });
+  const renderResults = () => {
+    console.log(results);
+    return results.map((r, i) => {
+      if (r === "please try again in 1 minute" || r === "No matches")
+        return (
+          <div key={i}>
+            <p>{r}</p>
+          </div>
+        );
+
+      return (
+        <div key={i} onClick={() => onClick(r["1. symbol"])}>
+          <p>{r["1. symbol"]}</p>
+          <p>{r["2. name"]}</p>
+        </div>
+      );
+    });
+  };
 
   return (
     <div className="search-dimmer">
@@ -49,7 +62,7 @@ const Search = ({ toggle, getInfo, status }) => {
         {results[0] === "loading" ? (
           <Loader />
         ) : (
-          <div className="search-results">{renderResults}</div>
+          <div className="search-results">{renderResults()}</div>
         )}
       </div>
     </div>
