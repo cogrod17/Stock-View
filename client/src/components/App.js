@@ -10,12 +10,12 @@ import useStock from "../hooks/useStock";
 import Loader from "./Loader";
 
 const App = () => {
-  const [stock, getInfo] = useStock("JPM");
+  const [stock, getInfo] = useStock("QQQ");
   const [scope, setScope] = useState("1y");
   const [isOpen, setIsOpen] = useState(false);
 
   if (!stock)
-    return <Search status={"none"} getInfo={getInfo} toggle={setIsOpen} />;
+    return <Search status={"landing"} getInfo={getInfo} toggle={setIsOpen} />;
   if (stock === "loading") return <Loader />;
 
   return (

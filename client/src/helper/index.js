@@ -99,7 +99,7 @@ export class StockChart {
 
     this.timeSeries["1m"] = final;
     this.timeSeries["1w"] = final.slice(bisect(final, timeIntervals["1w"]));
-    this.timeSeries["1d"] = final.slice(bisect(final, timeIntervals["1d"]));
+    this.timeSeries["1d"] = final.slice(final.length - 72, final.length);
   };
 
   getLongHistory = async () => {
@@ -127,7 +127,7 @@ export class StockChart {
 }
 
 const x = async () => {
-  const tsla = new StockChart("TSLA");
+  const tsla = new StockChart("QQQ");
   await tsla.getShortHistory();
   await tsla.getLongHistory();
 

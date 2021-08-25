@@ -1,24 +1,9 @@
 import React, { useState } from "react";
 
 const Header = ({ stock, setIsOpen }) => {
-  const [color, setColor] = useState(
+  const [color] = useState(
     +stock.quote.percent_change >= 0 ? "greenyellow" : "red"
   );
-
-  if (!stock)
-    return (
-      <div className="header-name">
-        Pick a stock!{" "}
-        <p
-          onClick={() => {
-            setIsOpen(true);
-          }}
-          id="search-btn"
-        >
-          Search
-        </p>
-      </div>
-    );
 
   return (
     <div>

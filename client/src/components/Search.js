@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { alphaApiKey } from "../topSecret";
+import Loader from "./Loader";
 import axios from "axios";
 
-const Search = ({ toggle, getInfo }) => {
+const Search = ({ toggle, getInfo, status }) => {
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
 
   const onSubmit = async (e) => {
     if (e.key !== "Enter") return;
+    setResults(["loading"]);
     const r = await axios.get(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${term}&apikey=${alphaApiKey}`
     );
@@ -30,10 +32,13 @@ const Search = ({ toggle, getInfo }) => {
 
   return (
     <div className="search-dimmer">
+      {status && <h3>Search a symbol to get started!</h3>}
       <div className="search-container">
-        <p id="close" onClick={() => toggle(false)}>
-          X
-        </p>
+        {!status && (
+          <p id="close" onClick={() => toggle(false)}>
+            X
+          </p>
+        )}
         <input
           onKeyDown={(e) => onSubmit(e)}
           className="search-input"
@@ -41,7 +46,11 @@ const Search = ({ toggle, getInfo }) => {
           onChange={(e) => setTerm(e.target.value)}
           placeholder="symbol"
         />
-        <div className="search-results">{renderResults}</div>
+        {results[0] === "loading" ? (
+          <Loader />
+        ) : (
+          <div className="search-results">{renderResults}</div>
+        )}
       </div>
     </div>
   );

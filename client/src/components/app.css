@@ -5,6 +5,7 @@
 
 body {
   background: #1c2533;
+  color: #ffffff;
   /*background: rgb(0, 0, 0);*/
 }
 
@@ -194,8 +195,8 @@ body {
 }
 
 .loader {
-  height: 150px;
-  width: 150px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
   border: #1c2533 solid 5px;
   border-top: cyan solid 5px;
@@ -245,6 +246,15 @@ body {
   z-index: 50;
 }
 
+.search-dimmer h3 {
+  position: relative;
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 150%;
+  top: 5%;
+}
+
 .search-container {
   position: absolute;
   top: 50%;
@@ -282,6 +292,7 @@ body {
 }
 
 .search-results {
+  height: 100%;
   margin: 0 auto;
   width: 70%;
   max-height: 100%;
@@ -292,7 +303,7 @@ body {
 
 .search-results div {
   padding: 10px;
-  border-bottom: grey solid 1px;
+  border-top: grey solid 1px;
   cursor: pointer;
 }
 

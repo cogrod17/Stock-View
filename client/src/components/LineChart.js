@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { timeIntervals } from "../helper";
 
-const bisect = d3.bisector((d) => d.datetime).right;
+const bisect = d3.bisector((d) => d.datetime).left;
 const margin = { top: 0, right: 0, bottom: 0, left: 30 };
 
 const LineChart = ({ stock, scope }) => {
@@ -25,7 +25,8 @@ const LineChart = ({ stock, scope }) => {
       };
     });
 
-    if (scope === "All") return time_series;
+    if (scope === "All" || scope === "1d" || scope === "1w" || scope === "1m")
+      return time_series;
 
     return time_series.slice(bisect(time_series, timeIntervals[scope]));
   };
@@ -61,8 +62,16 @@ const LineChart = ({ stock, scope }) => {
       .domain(d3.extent(data, (d) => d.datetime))
       .range([0, width]);
 
+    const formatDate = (d) => {
+      let d1 = d.toString().split(" ");
+      if (scope === "1d" || scope === "1w" || scope === "1m")
+        return `${d1[0]} ${d1[1]} ${d1[2]} ${d1[4]}`;
+      else return d3.utcFormat("%b %d, %Y")(d);
+    };
+
     const formatTicks = (d) => {
-      if (scope === "1w") return d3.utcFormat("%a %d")(d);
+      if (scope === "1d") return formatDate(d);
+      if (scope === "1w") return d3.utcFormat("%a %b %d")(d);
       if (scope === "3m" || scope === "1m") return d3.utcFormat("%b %d")(d);
       if (scope === "6m" || scope === "1y") return d3.utcFormat("%b %d, %Y")(d);
       if (scope === "2y" || scope === "5y") return d3.utcFormat("%b %Y")(d);
@@ -72,8 +81,11 @@ const LineChart = ({ stock, scope }) => {
 
     const setTicks = () => {
       if (scope === "3m" || scope === "6m") return 7;
+      if (scope === "1d") return 4;
       else return 6;
     };
+
+    console.log(data);
 
     svg
       .append("g")
@@ -185,13 +197,6 @@ const LineChart = ({ stock, scope }) => {
       else if (x3 > range[1] - step) domainIndex = domain().length - 1;
       else domainIndex = Math.floor(x3 / step);
       return domain()[domainIndex];
-    };
-
-    const formatDate = (d) => {
-      let d1 = d.toString().split(" ");
-      if (scope === "1w" || scope === "1m")
-        return `${d1[0]} ${d1[1]} ${d1[2]} ${d1[4]}`;
-      else return d3.utcFormat("%b %d, %Y")(d);
     };
 
     const mousemove = (e) => {
