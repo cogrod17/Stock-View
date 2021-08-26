@@ -3,7 +3,6 @@ import Loader from "./Loader";
 
 const Notice = ({ stock, getInfo }) => {
   useEffect(() => {
-    console.log("running");
     const timer = setInterval(() => getInfo(stock.symbol), 15000);
     return () => clearInterval(timer);
   });

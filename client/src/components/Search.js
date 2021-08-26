@@ -42,8 +42,6 @@ const Search = ({ toggle, getInfo, stock }) => {
     });
   };
 
-  console.log(stock);
-
   return (
     <div className="search-dimmer">
       {!stock && <h3>Search a symbol to get started!</h3>}

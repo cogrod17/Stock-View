@@ -199,8 +199,8 @@ body {
   width: 80px;
   border-radius: 50%;
   border: #1c2533 solid 5px;
-  border-top: cyan solid 5px;
-  border-bottom: cyan solid 5px;
+  border-top: rgb(0, 255, 255, 0.8) solid 5px;
+  border-bottom: rgb(0, 255, 255, 0.8) solid 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,6 +208,11 @@ body {
 }
 
 .loader-inside {
+  animation: spin 5s infinite ease-in-out;
+}
+
+.loader-inside,
+.loader-middle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -216,9 +221,13 @@ body {
   width: 50%;
   border-radius: 50%;
   border: #1c2533 solid 5px;
-  border-left: cyan solid 5px;
-  border-right: cyan solid 5px;
-  animation: spin 5s infinite ease-in-out;
+  border-left: rgb(0, 255, 255, 0.8) solid 5px;
+  border-right: rgb(0, 255, 255, 0.8) solid 5px;
+  border: cyan dotted 3px;
+}
+
+.loader-middle {
+  border: cyan dotted 2px;
 }
 
 @keyframes spin {
@@ -230,6 +239,24 @@ body {
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+.loader-tiny {
+  height: 50%;
+  width: 50%;
+  border-radius: 50%;
+  background: cyan;
+  animation: fade 3.5s ease-in-out infinite;
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
   }
 }
 

@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <div className="app">
-      {isOpen && <Search getInfo={getInfo} toggle={setIsOpen} />}
+      {isOpen && <Search stock={stock} getInfo={getInfo} toggle={setIsOpen} />}
       <Slider />
       <Header stock={stock} setIsOpen={setIsOpen} />
       <TimeSelector scope={scope} setScope={setScope} />
