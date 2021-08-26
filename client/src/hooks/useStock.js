@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StockChart } from "../helper";
 
-const useStock = (symbol) => {
+const useStock = (loading, symbol) => {
   const [stock, setStock] = useState();
 
   useEffect(() => {
@@ -10,16 +10,16 @@ const useStock = (symbol) => {
   }, [symbol]);
 
   const getInfo = async (symbol) => {
-    setStock("loading");
-    // const x = new StockChart(symbol);
-    // await x.getLongHistory();
-    // await x.getShortHistory();
+    loading(true);
+    const x = new StockChart(symbol);
+    await x.getLongHistory();
+    await x.getShortHistory();
 
-    // localStorage.setItem("stock", JSON.stringify(x));
-    // setStock(x);
-
-    const x = JSON.parse(localStorage.getItem("stock"));
+    localStorage.setItem("stock", JSON.stringify(x));
     setStock(x);
+    loading(false);
+    // const x = JSON.parse(localStorage.getItem("stock"));
+    // setStock(x);
   };
 
   return [stock, getInfo];

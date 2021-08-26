@@ -3,7 +3,7 @@ import { alphaApiKey } from "../topSecret";
 import Loader from "./Loader";
 import axios from "axios";
 
-const Search = ({ toggle, getInfo, status }) => {
+const Search = ({ toggle, getInfo, stock }) => {
   const [term, setTerm] = useState("");
   const [results, setResults] = useState([]);
 
@@ -19,13 +19,12 @@ const Search = ({ toggle, getInfo, status }) => {
     else setResults(r.data.bestMatches);
   };
 
-  const onClick = (x) => {
-    getInfo(x);
+  const onClick = async (x) => {
     toggle(false);
+    getInfo(x);
   };
 
   const renderResults = () => {
-    console.log(results);
     return results.map((r, i) => {
       if (r === "please try again in 1 minute" || r === "No matches")
         return (
@@ -43,11 +42,14 @@ const Search = ({ toggle, getInfo, status }) => {
     });
   };
 
+  console.log(stock);
+
   return (
     <div className="search-dimmer">
-      {status && <h3>Search a symbol to get started!</h3>}
+      {!stock && <h3>Search a symbol to get started!</h3>}
+      {stock && !stock.isValid && <h3>Could not find symbol</h3>}
       <div className="search-container">
-        {!status && (
+        {stock && (
           <p id="close" onClick={() => toggle(false)}>
             X
           </p>

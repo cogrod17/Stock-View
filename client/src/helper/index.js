@@ -28,11 +28,10 @@ export const timeIntervals = {
 
 export class StockChart {
   constructor(symbol) {
+    this.isValid = true;
+    this.apiLimit = false;
     this.symbol = symbol;
     this.api_key = twelveDataKey;
-    this.wss = new WebSocket(
-      `wss://ws.twelvedata.com/v1/quotes/price?apikey=${this.api_key}`
-    );
     this.quote = [];
     this.timeSeries = {
       "1d": [],
@@ -41,40 +40,6 @@ export class StockChart {
       All: [],
     };
   }
-
-  subscribe = () => {
-    this.wss.on("open", () => {
-      this.isConnected = true;
-      this.wss.send(this.sendMsg("subscribe"));
-      this.wss.on("message", (x) => {
-        let msg = JSON.parse(x);
-        if (msg.event === "price" && msg.symbol === this.symbol) {
-          const { timestamp, price } = msg;
-          this.data.push({ timestamp, price });
-          console.log("///////////////////////////////");
-          console.log(this.data);
-        }
-      });
-    });
-  };
-
-  closeSocket = () => {
-    this.wss.close();
-    this.isConnected = false;
-  };
-
-  unsubscribe = () => {
-    this.wss.send(this.sendMsg("unsubscribe"));
-  };
-
-  sendMsg = (action) => {
-    return JSON.stringify({
-      action,
-      params: {
-        symbols: this.symbol,
-      },
-    });
-  };
 
   getShortHistory = async () => {
     const { data } = await axios.post(
@@ -88,6 +53,16 @@ export class StockChart {
         timezone: "America/New_York",
       }
     );
+
+    if (data.code === 429) {
+      this.apiLimit = true;
+      return;
+    }
+
+    if (data.data[0].code === 400) {
+      this.isValid = false;
+      return;
+    }
 
     const { values } = data.data[0];
 
@@ -114,6 +89,16 @@ export class StockChart {
       }
     );
 
+    if (data.code === 429) {
+      this.apiLimit = true;
+      return;
+    }
+
+    if (data.data && data.data[0].code === 400) {
+      this.isValid = false;
+      return;
+    }
+
     const final = data.data[1].values
       .map((d) => {
         return { ...d, datetime: new Date(d.datetime) };
@@ -131,6 +116,19 @@ const x = async () => {
   await tsla.getShortHistory();
   await tsla.getLongHistory();
 
-  localStorage.setItem("stock", JSON.stringify(tsla));
+  // localStorage.setItem("stock", JSON.stringify(tsla));
   console.log("okay");
+  console.log(tsla);
 };
+
+// const ws = new WebSocket("wss://ws.finnhub.io?token=c2b9odaad3i8k5kfml40");
+
+// ws.addEventListener("open", (e) => {
+//   console.log("opened");
+//   console.log(e);
+//   ws.send(JSON.stringify({ type: "subscribe", symbol: "BINANCE:BTCUSDT" }));
+// });
+
+// ws.addEventListener("message", (e) => {
+//   console.log(JSON.parse(e.data));
+// });

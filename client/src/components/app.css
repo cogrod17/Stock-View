@@ -316,3 +316,15 @@ body {
   font-size: 80%;
   color: grey;
 }
+
+#api-notice {
+  position: absolute;
+  display: inline-block;
+  font-size: 150%;
+  border-left: grey solid 1px;
+
+  padding: 0 5px;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+}
