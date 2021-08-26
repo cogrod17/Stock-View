@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import * as d3 from "d3";
+import { format } from "d3";
 import axios from "axios";
 import { finPrepApiKey } from "../topSecret";
 
@@ -11,7 +11,7 @@ const Ticker = ({ data }) => {
     <div className="slider-ticker">
       <div>
         <h4>{data.ticker}</h4>
-        <p>${d3.format(",")(data.price)}</p>
+        <p>${format(",")(data.price)}</p>
       </div>
       <div style={{ color, transform }}>^</div>
       <p style={{ color }} id="percent">
@@ -25,12 +25,12 @@ const Slider = () => {
   const [data, setData] = useState([]);
 
   const getActives = useCallback(async () => {
-    // const res = await axios.get(
-    //   `https://financialmodelingprep.com/api/v3/actives?apikey=${finPrepApiKey}`
-    // );
+    const res = await axios.get(
+      `https://financialmodelingprep.com/api/v3/actives?apikey=${finPrepApiKey}`
+    );
 
-    setData(JSON.parse(localStorage.getItem("actives")));
-    // setData(res.data);
+    //  setData(JSON.parse(localStorage.getItem("actives")));
+    setData(res.data);
   }, []);
 
   useEffect(() => {

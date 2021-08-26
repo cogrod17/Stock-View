@@ -110,25 +110,3 @@ export class StockChart {
     this.timeSeries["All"] = final;
   };
 }
-
-const x = async () => {
-  const tsla = new StockChart("QQQ");
-  await tsla.getShortHistory();
-  await tsla.getLongHistory();
-
-  // localStorage.setItem("stock", JSON.stringify(tsla));
-  console.log("okay");
-  console.log(tsla);
-};
-
-// const ws = new WebSocket("wss://ws.finnhub.io?token=c2b9odaad3i8k5kfml40");
-
-// ws.addEventListener("open", (e) => {
-//   console.log("opened");
-//   console.log(e);
-//   ws.send(JSON.stringify({ type: "subscribe", symbol: "BINANCE:BTCUSDT" }));
-// });
-
-// ws.addEventListener("message", (e) => {
-//   console.log(JSON.parse(e.data));
-// });

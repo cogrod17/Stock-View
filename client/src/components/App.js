@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 //import CandleChart from "./CandleChart";
 import "./app.css";
 import LineChart from "./LineChart";

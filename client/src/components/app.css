@@ -95,7 +95,7 @@ body {
 
 .ticker-wrap {
   display: flex;
-  animation: ticker 120s infinite linear;
+  animation: ticker 200s infinite linear;
   padding-left: 100%;
 }
 
@@ -199,8 +199,8 @@ body {
   width: 80px;
   border-radius: 50%;
   border: #1c2533 solid 5px;
-  border-top: rgb(0, 255, 255, 0.8) solid 5px;
-  border-bottom: rgb(0, 255, 255, 0.8) solid 5px;
+
+  border-bottom: rgb(0, 255, 255, 0.8) solid 3px;
   display: flex;
   align-items: center;
   justify-content: center;

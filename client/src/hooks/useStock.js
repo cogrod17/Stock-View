@@ -7,6 +7,7 @@ const useStock = (loading, symbol) => {
   useEffect(() => {
     if (!symbol) return;
     getInfo(symbol);
+    // eslint-disable-next-line
   }, [symbol]);
 
   const getInfo = async (symbol) => {
