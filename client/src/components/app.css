@@ -85,7 +85,8 @@ body {
 }
 
 .slider-container {
-  height: 50px;
+  max-height: 60px;
+  min-height: 60px;
   margin: 0 auto;
   overflow: hidden;
   display: flex;

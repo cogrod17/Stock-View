@@ -37,8 +37,6 @@ const Slider = () => {
     getActives();
   }, [getActives]);
 
-  if (!data.length) return null;
-
   const render = () => {
     return data.map((d, i) => {
       return <Ticker key={i} data={d} />;
